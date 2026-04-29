@@ -51,16 +51,16 @@ public class VitalEdgeConfigScreen extends Screen {
         var thicknessSlider = this.addRenderableWidget(new AbstractSliderButton(
             centerX - sliderWidth / 2, startY + rowHeight, sliderWidth, 20,
             Component.literal("Edge Thickness: " + Math.round(edgeThickness * 100) + "%"),
-            (edgeThickness - 0.05f) / 0.35f
+            (edgeThickness - 0.03f) / 0.17f
         ) {
             @Override
             protected void updateMessage() {
-                edgeThickness = 0.05f + (float) this.value * 0.35f;
+                edgeThickness = 0.03f + (float) this.value * 0.17f;
                 this.setMessage(Component.literal("Edge Thickness: " + Math.round(edgeThickness * 100) + "%"));
             }
             @Override
             protected void applyValue() {
-                edgeThickness = 0.05f + (float) this.value * 0.35f;
+                edgeThickness = 0.03f + (float) this.value * 0.17f;
             }
         });
         descriptions.put(thicknessSlider, "How far the gradient bleeds inward from each edge.");
