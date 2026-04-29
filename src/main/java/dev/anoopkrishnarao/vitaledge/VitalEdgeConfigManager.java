@@ -17,10 +17,10 @@ public class VitalEdgeConfigManager {
 
     private static class ConfigData {
         boolean enabled = true;
-        float edgeThickness = 0.05f;
-        int stepCount = 12;
-        float smoothness = 0.8f;
-        float opacity = 0.35f;
+        float edgeThickness = 0.055f;
+        int stepCount = 14;
+        boolean steppedMode = false;
+        float opacity = 0.25f;
         boolean surgeEnabled = true;
         boolean biomeBlendEnabled = true;
         float biomeBlendStrength = 0.5f;
@@ -28,7 +28,7 @@ public class VitalEdgeConfigManager {
 
     public static void load() {
         if (!Files.exists(CONFIG_PATH)) {
-            save(); // write defaults on first run
+            save();
             return;
         }
 
@@ -38,17 +38,17 @@ public class VitalEdgeConfigManager {
             if (data == null) return;
 
             VitalEdgeConfig.enabled = data.enabled;
-            VitalEdgeConfig.edgeThickness = data.edgeThickness;
-            VitalEdgeConfig.stepCount = data.stepCount;
-            VitalEdgeConfig.smoothness = data.smoothness;
-            VitalEdgeConfig.opacity = data.opacity;
+            VitalEdgeConfig.edgeThickness = Math.clamp(data.edgeThickness, 0.03f, 0.08f);
+            VitalEdgeConfig.stepCount = Math.clamp(data.stepCount, 8, 20);
+            VitalEdgeConfig.steppedMode = data.steppedMode;
+            VitalEdgeConfig.opacity = Math.clamp(data.opacity, 0f, 0.5f);
             VitalEdgeConfig.surgeEnabled = data.surgeEnabled;
             VitalEdgeConfig.biomeBlendEnabled = data.biomeBlendEnabled;
-            VitalEdgeConfig.biomeBlendStrength = data.biomeBlendStrength;
+            VitalEdgeConfig.biomeBlendStrength = Math.clamp(data.biomeBlendStrength, 0f, 1f);
 
             VitalEdgeClient.LOGGER.info("Vital Edge | Config loaded.");
         } catch (IOException e) {
-            VitalEdgeClient.LOGGER.error("VitalEdge | Failed to load config: {}", e.getMessage());
+            VitalEdgeClient.LOGGER.error("Vital Edge | Config failed to load: {}", e.getMessage());
         }
     }
 
@@ -57,7 +57,7 @@ public class VitalEdgeConfigManager {
         data.enabled = VitalEdgeConfig.enabled;
         data.edgeThickness = VitalEdgeConfig.edgeThickness;
         data.stepCount = VitalEdgeConfig.stepCount;
-        data.smoothness = VitalEdgeConfig.smoothness;
+        data.steppedMode = VitalEdgeConfig.steppedMode;
         data.opacity = VitalEdgeConfig.opacity;
         data.surgeEnabled = VitalEdgeConfig.surgeEnabled;
         data.biomeBlendEnabled = VitalEdgeConfig.biomeBlendEnabled;
@@ -67,7 +67,7 @@ public class VitalEdgeConfigManager {
             Files.writeString(CONFIG_PATH, GSON.toJson(data));
             VitalEdgeClient.LOGGER.info("Vital Edge | Config saved.");
         } catch (IOException e) {
-            VitalEdgeClient.LOGGER.error("VitalEdge | Failed to save config: {}", e.getMessage());
+            VitalEdgeClient.LOGGER.error("Vital Edge | Config failed to save: {}", e.getMessage());
         }
     }
 }

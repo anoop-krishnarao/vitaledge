@@ -16,7 +16,6 @@ public class VitalEdgeConfigScreen extends Screen {
 
     private float edgeThickness = VitalEdgeConfig.edgeThickness;
     private int stepCount = VitalEdgeConfig.stepCount;
-    private float smoothness = VitalEdgeConfig.smoothness;
     private float opacity = VitalEdgeConfig.opacity;
     private float biomeBlendStrength = VitalEdgeConfig.biomeBlendStrength;
 
@@ -47,77 +46,71 @@ public class VitalEdgeConfigScreen extends Screen {
         );
         descriptions.put(overlayBtn, "Toggles the entire overlay on or off.");
 
-        // Edge thickness slider
+        // Edge thickness slider (3% to 8%)
         var thicknessSlider = this.addRenderableWidget(new AbstractSliderButton(
             centerX - sliderWidth / 2, startY + rowHeight, sliderWidth, 20,
             Component.literal("Edge Thickness: " + Math.round(edgeThickness * 100) + "%"),
-            (edgeThickness - 0.03f) / 0.17f
+            (edgeThickness - 0.03f) / 0.05f
         ) {
             @Override
             protected void updateMessage() {
-                edgeThickness = 0.03f + (float) this.value * 0.17f;
+                edgeThickness = 0.03f + (float) this.value * 0.05f;
                 this.setMessage(Component.literal("Edge Thickness: " + Math.round(edgeThickness * 100) + "%"));
             }
             @Override
             protected void applyValue() {
-                edgeThickness = 0.03f + (float) this.value * 0.17f;
+                edgeThickness = 0.03f + (float) this.value * 0.05f;
             }
         });
         descriptions.put(thicknessSlider, "How far the gradient bleeds inward from each edge.");
 
-        // Step count slider
+        // Step count slider (8 to 20)
         var stepsSlider = this.addRenderableWidget(new AbstractSliderButton(
             centerX - sliderWidth / 2, startY + rowHeight * 2, sliderWidth, 20,
             Component.literal("Steps: " + stepCount),
-            (stepCount - 2) / 18.0
+            (stepCount - 8) / 12.0
         ) {
             @Override
             protected void updateMessage() {
-                stepCount = 2 + (int) Math.round(this.value * 18);
+                stepCount = 8 + (int) Math.round(this.value * 12);
                 this.setMessage(Component.literal("Steps: " + stepCount));
             }
             @Override
             protected void applyValue() {
-                stepCount = 2 + (int) Math.round(this.value * 18);
+                stepCount = 8 + (int) Math.round(this.value * 12);
             }
         });
-        descriptions.put(stepsSlider, "Number of bands in the gradient. Low = blocky, high = smooth.");
+        descriptions.put(stepsSlider, "Number of bands in the gradient. Only applies in Stepped mode.");
 
-        // Smoothness slider
-        var smoothnessSlider = this.addRenderableWidget(new AbstractSliderButton(
-            centerX - sliderWidth / 2, startY + rowHeight * 3, sliderWidth, 20,
-            Component.literal("Smoothness: " + Math.round(smoothness * 100) + "%"),
-            smoothness
-        ) {
-            @Override
-            protected void updateMessage() {
-                smoothness = (float) this.value;
-                this.setMessage(Component.literal("Smoothness: " + Math.round(smoothness * 100) + "%"));
-            }
-            @Override
-            protected void applyValue() {
-                smoothness = (float) this.value;
-            }
-        });
-        descriptions.put(smoothnessSlider, "How softly each band blends into the next.");
+        // Gradient style toggle
+        var styleBtn = this.addRenderableWidget(Button.builder(
+            Component.literal("Gradient: " + (VitalEdgeConfig.steppedMode ? "Stepped" : "Smooth")),
+            btn -> {
+                VitalEdgeConfig.steppedMode = !VitalEdgeConfig.steppedMode;
+                btn.setMessage(Component.literal("Gradient: " + (VitalEdgeConfig.steppedMode ? "Stepped" : "Smooth")));
+            })
+            .bounds(centerX - sliderWidth / 2, startY + rowHeight * 3, sliderWidth, 20)
+            .build()
+        );
+        descriptions.put(styleBtn, "Stepped: blocky Minecraft-style bands. Smooth: soft exponential fade.");
 
-        // Opacity slider
+        // Opacity slider (0% to 50%)
         var opacitySlider = this.addRenderableWidget(new AbstractSliderButton(
             centerX - sliderWidth / 2, startY + rowHeight * 4, sliderWidth, 20,
             Component.literal("Opacity: " + Math.round(opacity * 100) + "%"),
-            (opacity - 0.1f) / 0.9f
+            opacity / 0.5f
         ) {
             @Override
             protected void updateMessage() {
-                opacity = 0.1f + (float) this.value * 0.9f;
+                opacity = (float) this.value * 0.5f;
                 this.setMessage(Component.literal("Opacity: " + Math.round(opacity * 100) + "%"));
             }
             @Override
             protected void applyValue() {
-                opacity = 0.1f + (float) this.value * 0.9f;
+                opacity = (float) this.value * 0.5f;
             }
         });
-        descriptions.put(opacitySlider, "Master transparency of the overlay. Lower = more subtle.");
+        descriptions.put(opacitySlider, "Master transparency of the overlay. Max 50% to avoid visual clutter.");
 
         // Damage surge toggle
         var surgeBtn = this.addRenderableWidget(Button.builder(
@@ -174,7 +167,6 @@ public class VitalEdgeConfigScreen extends Screen {
     public void onClose() {
         VitalEdgeConfig.edgeThickness = edgeThickness;
         VitalEdgeConfig.stepCount = stepCount;
-        VitalEdgeConfig.smoothness = smoothness;
         VitalEdgeConfig.opacity = opacity;
         VitalEdgeConfig.biomeBlendStrength = biomeBlendStrength;
         VitalEdgeConfigManager.save();
@@ -187,7 +179,6 @@ public class VitalEdgeConfigScreen extends Screen {
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 15, 0xFFFFFF);
         super.render(graphics, mouseX, mouseY, delta);
 
-        // Update hovered description
         hoveredDescription = "";
         for (var entry : descriptions.entrySet()) {
             AbstractWidget widget = entry.getKey();
@@ -197,7 +188,6 @@ public class VitalEdgeConfigScreen extends Screen {
             }
         }
 
-        // Render description below Done button
         if (!hoveredDescription.isEmpty()) {
             int descY = 40 + 28 * 8 + 10 + 28;
             graphics.drawCenteredString(this.font, hoveredDescription, this.width / 2, descY, 0xAAAAAA);
