@@ -17,7 +17,7 @@ public class VitalEdgeConfigScreen extends Screen {
     private float biomeBlendStrength = VitalEdgeConfig.biomeBlendStrength;
 
     public VitalEdgeConfigScreen(Screen parent) {
-        super(Component.literal("VitalEdge Settings"));
+        super(Component.literal("Vital Edge Settings"));
         this.parent = parent;
     }
 
