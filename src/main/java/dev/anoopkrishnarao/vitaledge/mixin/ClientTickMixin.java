@@ -24,9 +24,12 @@ public class ClientTickMixin {
         // Temporary: log every 20 ticks (once per second)
         if (mc.level != null && mc.level.getGameTime() % 20 == 0) {
             if (ArmorDurabilityTracker.hasArmor()) {
+                int color = ArmorDurabilityTracker.getColor((float) player.getY());
                 VitalEdgeClient.LOGGER.info(
-                    "VitalEdge | Armor durability: {}%",
-                    Math.round(ArmorDurabilityTracker.getDurabilityPercent() * 100)
+                    "VitalEdge | Durability: {}% | Y: {} | Color: #{}",
+                    Math.round(ArmorDurabilityTracker.getDurabilityPercent() * 100),
+                    Math.round(player.getY()),
+                    String.format("%06X", color & 0xFFFFFF)
                 );
             } else {
                 VitalEdgeClient.LOGGER.info("VitalEdge | No armor equipped.");

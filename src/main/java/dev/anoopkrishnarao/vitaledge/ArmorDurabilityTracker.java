@@ -45,8 +45,9 @@ public class ArmorDurabilityTracker {
         return durabilityPercent >= 0f;
     }
 
-    public static int getColor() {
+    public static int getColor(float playerY) {
         if (!hasArmor()) return 0x00000000;
-        return DurabilityColorMapper.getColor(durabilityPercent);
+        int baseColor = DurabilityColorMapper.getColor(durabilityPercent);
+        return YHeightModifier.modify(baseColor, playerY);
     }
 }
