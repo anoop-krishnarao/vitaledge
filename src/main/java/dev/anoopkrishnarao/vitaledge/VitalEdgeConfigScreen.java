@@ -10,11 +10,11 @@ public class VitalEdgeConfigScreen extends Screen {
 
     private final Screen parent;
 
-    // Slider state
     private float edgeThickness = VitalEdgeConfig.edgeThickness;
     private int stepCount = VitalEdgeConfig.stepCount;
     private float smoothness = VitalEdgeConfig.smoothness;
     private float opacity = VitalEdgeConfig.opacity;
+    private float biomeBlendStrength = VitalEdgeConfig.biomeBlendStrength;
 
     public VitalEdgeConfigScreen(Screen parent) {
         super(Component.literal("VitalEdge Settings"));
@@ -43,7 +43,6 @@ public class VitalEdgeConfigScreen extends Screen {
         this.addRenderableWidget(new AbstractSliderButton(
             centerX - sliderWidth / 2, startY + rowHeight, sliderWidth, 20,
             Component.literal("Edge Thickness: " + Math.round(edgeThickness * 100) + "%"),
-            // value: 0.0 = 5%, 1.0 = 40%
             (edgeThickness - 0.05f) / 0.35f
         ) {
             @Override
@@ -119,22 +118,50 @@ public class VitalEdgeConfigScreen extends Screen {
             .build()
         );
 
+        // Biome blend toggle
+        this.addRenderableWidget(Button.builder(
+            Component.literal("Biome Blend: " + (VitalEdgeConfig.biomeBlendEnabled ? "ON" : "OFF")),
+            btn -> {
+                VitalEdgeConfig.biomeBlendEnabled = !VitalEdgeConfig.biomeBlendEnabled;
+                btn.setMessage(Component.literal("Biome Blend: " + (VitalEdgeConfig.biomeBlendEnabled ? "ON" : "OFF")));
+            })
+            .bounds(centerX - sliderWidth / 2, startY + rowHeight * 6, sliderWidth, 20)
+            .build()
+        );
+
+        // Biome blend strength slider
+        this.addRenderableWidget(new AbstractSliderButton(
+            centerX - sliderWidth / 2, startY + rowHeight * 7, sliderWidth, 20,
+            Component.literal("Blend Strength: " + Math.round(biomeBlendStrength * 100) + "%"),
+            biomeBlendStrength
+        ) {
+            @Override
+            protected void updateMessage() {
+                biomeBlendStrength = (float) this.value;
+                this.setMessage(Component.literal("Blend Strength: " + Math.round(biomeBlendStrength * 100) + "%"));
+            }
+            @Override
+            protected void applyValue() {
+                biomeBlendStrength = (float) this.value;
+            }
+        });
+
         // Done button
         this.addRenderableWidget(Button.builder(
             Component.literal("Done"),
             btn -> this.onClose())
-            .bounds(centerX - sliderWidth / 2, startY + rowHeight * 6 + 10, sliderWidth, 20)
+            .bounds(centerX - sliderWidth / 2, startY + rowHeight * 8 + 10, sliderWidth, 20)
             .build()
         );
     }
 
     @Override
     public void onClose() {
-        // Write local state to config
         VitalEdgeConfig.edgeThickness = edgeThickness;
         VitalEdgeConfig.stepCount = stepCount;
         VitalEdgeConfig.smoothness = smoothness;
         VitalEdgeConfig.opacity = opacity;
+        VitalEdgeConfig.biomeBlendStrength = biomeBlendStrength;
         this.minecraft.setScreen(parent);
     }
 
