@@ -46,7 +46,7 @@ public class VitalEdgeConfigManager {
             VitalEdgeConfig.biomeBlendEnabled = data.biomeBlendEnabled;
             VitalEdgeConfig.biomeBlendStrength = data.biomeBlendStrength;
 
-            VitalEdgeClient.LOGGER.info("VitalEdge | Config loaded.");
+            VitalEdgeClient.LOGGER.info("Vital Edge | Config loaded.");
         } catch (IOException e) {
             VitalEdgeClient.LOGGER.error("VitalEdge | Failed to load config: {}", e.getMessage());
         }
@@ -65,7 +65,7 @@ public class VitalEdgeConfigManager {
 
         try {
             Files.writeString(CONFIG_PATH, GSON.toJson(data));
-            VitalEdgeClient.LOGGER.info("VitalEdge | Config saved.");
+            VitalEdgeClient.LOGGER.info("Vital Edge | Config saved.");
         } catch (IOException e) {
             VitalEdgeClient.LOGGER.error("VitalEdge | Failed to save config: {}", e.getMessage());
         }

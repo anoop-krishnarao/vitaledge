@@ -14,7 +14,6 @@ public class EdgeGradientRenderer {
         float smoothness = VitalEdgeConfig.smoothness;
         float opacity = VitalEdgeConfig.opacity;
 
-        // Apply pulse multiplier
         float pulse = DamageSurgeTracker.getPulseMultiplier(ArmorDurabilityTracker.getDurabilityPercent());
         opacity = Math.clamp(opacity * pulse, 0f, 1f);
 
@@ -37,14 +36,13 @@ public class EdgeGradientRenderer {
 
             int offset = i * stepSize;
 
-            // Top edge
+            // Top and bottom span full width
             graphics.fill(0, offset, screenWidth, offset + stepSize, color);
-            // Bottom edge
             graphics.fill(0, screenHeight - offset - stepSize, screenWidth, screenHeight - offset, color);
-            // Left edge
-            graphics.fill(offset, offset + stepSize, offset + stepSize, screenHeight - offset - stepSize, color);
-            // Right edge
-            graphics.fill(screenWidth - offset - stepSize, offset + stepSize, screenWidth - offset, screenHeight - offset - stepSize, color);
+
+            // Left and right span full height including corners
+            graphics.fill(offset, 0, offset + stepSize, screenHeight, color);
+            graphics.fill(screenWidth - offset - stepSize, 0, screenWidth - offset, screenHeight, color);
         }
     }
 }
