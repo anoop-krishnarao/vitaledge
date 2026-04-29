@@ -2,9 +2,13 @@ package dev.anoopkrishnarao.vitaledge;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class VitalEdgeConfigScreen extends Screen {
 
@@ -15,6 +19,9 @@ public class VitalEdgeConfigScreen extends Screen {
     private float smoothness = VitalEdgeConfig.smoothness;
     private float opacity = VitalEdgeConfig.opacity;
     private float biomeBlendStrength = VitalEdgeConfig.biomeBlendStrength;
+
+    private final Map<AbstractWidget, String> descriptions = new HashMap<>();
+    private String hoveredDescription = "";
 
     public VitalEdgeConfigScreen(Screen parent) {
         super(Component.literal("Vital Edge Settings"));
@@ -29,7 +36,7 @@ public class VitalEdgeConfigScreen extends Screen {
         int rowHeight = 28;
 
         // Enabled toggle
-        this.addRenderableWidget(Button.builder(
+        var overlayBtn = this.addRenderableWidget(Button.builder(
             Component.literal("Overlay: " + (VitalEdgeConfig.enabled ? "ON" : "OFF")),
             btn -> {
                 VitalEdgeConfig.enabled = !VitalEdgeConfig.enabled;
@@ -38,9 +45,10 @@ public class VitalEdgeConfigScreen extends Screen {
             .bounds(centerX - sliderWidth / 2, startY, sliderWidth, 20)
             .build()
         );
+        descriptions.put(overlayBtn, "Toggles the entire overlay on or off.");
 
         // Edge thickness slider
-        this.addRenderableWidget(new AbstractSliderButton(
+        var thicknessSlider = this.addRenderableWidget(new AbstractSliderButton(
             centerX - sliderWidth / 2, startY + rowHeight, sliderWidth, 20,
             Component.literal("Edge Thickness: " + Math.round(edgeThickness * 100) + "%"),
             (edgeThickness - 0.05f) / 0.35f
@@ -55,9 +63,10 @@ public class VitalEdgeConfigScreen extends Screen {
                 edgeThickness = 0.05f + (float) this.value * 0.35f;
             }
         });
+        descriptions.put(thicknessSlider, "How far the gradient bleeds inward from each edge.");
 
         // Step count slider
-        this.addRenderableWidget(new AbstractSliderButton(
+        var stepsSlider = this.addRenderableWidget(new AbstractSliderButton(
             centerX - sliderWidth / 2, startY + rowHeight * 2, sliderWidth, 20,
             Component.literal("Steps: " + stepCount),
             (stepCount - 2) / 18.0
@@ -72,9 +81,10 @@ public class VitalEdgeConfigScreen extends Screen {
                 stepCount = 2 + (int) Math.round(this.value * 18);
             }
         });
+        descriptions.put(stepsSlider, "Number of bands in the gradient. Low = blocky, high = smooth.");
 
         // Smoothness slider
-        this.addRenderableWidget(new AbstractSliderButton(
+        var smoothnessSlider = this.addRenderableWidget(new AbstractSliderButton(
             centerX - sliderWidth / 2, startY + rowHeight * 3, sliderWidth, 20,
             Component.literal("Smoothness: " + Math.round(smoothness * 100) + "%"),
             smoothness
@@ -89,9 +99,10 @@ public class VitalEdgeConfigScreen extends Screen {
                 smoothness = (float) this.value;
             }
         });
+        descriptions.put(smoothnessSlider, "How softly each band blends into the next.");
 
         // Opacity slider
-        this.addRenderableWidget(new AbstractSliderButton(
+        var opacitySlider = this.addRenderableWidget(new AbstractSliderButton(
             centerX - sliderWidth / 2, startY + rowHeight * 4, sliderWidth, 20,
             Component.literal("Opacity: " + Math.round(opacity * 100) + "%"),
             (opacity - 0.1f) / 0.9f
@@ -106,9 +117,10 @@ public class VitalEdgeConfigScreen extends Screen {
                 opacity = 0.1f + (float) this.value * 0.9f;
             }
         });
+        descriptions.put(opacitySlider, "Master transparency of the overlay. Lower = more subtle.");
 
         // Damage surge toggle
-        this.addRenderableWidget(Button.builder(
+        var surgeBtn = this.addRenderableWidget(Button.builder(
             Component.literal("Damage Surge: " + (VitalEdgeConfig.surgeEnabled ? "ON" : "OFF")),
             btn -> {
                 VitalEdgeConfig.surgeEnabled = !VitalEdgeConfig.surgeEnabled;
@@ -117,9 +129,10 @@ public class VitalEdgeConfigScreen extends Screen {
             .bounds(centerX - sliderWidth / 2, startY + rowHeight * 5, sliderWidth, 20)
             .build()
         );
+        descriptions.put(surgeBtn, "Pulses the overlay when you take damage.");
 
         // Biome blend toggle
-        this.addRenderableWidget(Button.builder(
+        var biomeBtn = this.addRenderableWidget(Button.builder(
             Component.literal("Biome Blend: " + (VitalEdgeConfig.biomeBlendEnabled ? "ON" : "OFF")),
             btn -> {
                 VitalEdgeConfig.biomeBlendEnabled = !VitalEdgeConfig.biomeBlendEnabled;
@@ -128,9 +141,10 @@ public class VitalEdgeConfigScreen extends Screen {
             .bounds(centerX - sliderWidth / 2, startY + rowHeight * 6, sliderWidth, 20)
             .build()
         );
+        descriptions.put(biomeBtn, "Tints the overlay based on your current biome.");
 
         // Biome blend strength slider
-        this.addRenderableWidget(new AbstractSliderButton(
+        var blendSlider = this.addRenderableWidget(new AbstractSliderButton(
             centerX - sliderWidth / 2, startY + rowHeight * 7, sliderWidth, 20,
             Component.literal("Blend Strength: " + Math.round(biomeBlendStrength * 100) + "%"),
             biomeBlendStrength
@@ -145,6 +159,7 @@ public class VitalEdgeConfigScreen extends Screen {
                 biomeBlendStrength = (float) this.value;
             }
         });
+        descriptions.put(blendSlider, "How strongly the biome tint affects the overlay color.");
 
         // Done button
         this.addRenderableWidget(Button.builder(
@@ -170,5 +185,21 @@ public class VitalEdgeConfigScreen extends Screen {
         this.renderBackground(graphics, mouseX, mouseY, delta);
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 15, 0xFFFFFF);
         super.render(graphics, mouseX, mouseY, delta);
+
+        // Update hovered description
+        hoveredDescription = "";
+        for (var entry : descriptions.entrySet()) {
+            AbstractWidget widget = entry.getKey();
+            if (widget.isHovered()) {
+                hoveredDescription = entry.getValue();
+                break;
+            }
+        }
+
+        // Render description below Done button
+        if (!hoveredDescription.isEmpty()) {
+            int descY = 40 + 28 * 8 + 10 + 28;
+            graphics.drawCenteredString(this.font, hoveredDescription, this.width / 2, descY, 0xAAAAAA);
+        }
     }
 }
