@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "vitaledge",
+  "version": "${version}",
+  "name": "VitalEdge",
+  "description": "Client-side Minecraft utility mod.",
+  "authors": ["anoopk"],
+  "contact": {
+    "sources": "https://github.com/anoop-krishnarao/vitaledge"
+  },
+  "license": "MIT",
+  "icon": "assets/vitaledge/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.anoopkrishnarao.vitaledge.VitalEdgeClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": "~1.21",
+    "java": ">=21"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}
