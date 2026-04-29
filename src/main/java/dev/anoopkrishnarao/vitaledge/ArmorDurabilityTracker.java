@@ -31,7 +31,7 @@ public class ArmorDurabilityTracker {
         }
 
         if (equippedCount == 0) {
-            durabilityPercent = -1f; // no armor equipped
+            durabilityPercent = -1f;
         } else {
             durabilityPercent = 1f - ((float) totalDamage / (float) totalMax);
         }
@@ -43,5 +43,10 @@ public class ArmorDurabilityTracker {
 
     public static boolean hasArmor() {
         return durabilityPercent >= 0f;
+    }
+
+    public static int getColor() {
+        if (!hasArmor()) return 0x00000000;
+        return DurabilityColorMapper.getColor(durabilityPercent);
     }
 }
