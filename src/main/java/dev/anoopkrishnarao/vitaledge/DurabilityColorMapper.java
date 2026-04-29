@@ -2,46 +2,43 @@ package dev.anoopkrishnarao.vitaledge;
 
 public class DurabilityColorMapper {
 
-    // Pulse: 1.5s period, Value oscillates between 0.55 and 1.0
     private static final float PULSE_PERIOD_MS = 1500f;
     private static final float PULSE_MIN_V = 0.55f;
     private static final float PULSE_MAX_V = 1.0f;
 
     /**
-     * Returns a packed ARGB int for the given durability percent.
+     * Returns a packed ARGB int for the given durability percent and hue shift.
      * durabilityPercent: 0.0 (broken) to 1.0 (full)
+     * hueShift: degrees to shift the base hue (from DimensionTintProvider)
      */
-    public static int getColor(float durabilityPercent) {
+    public static int getColor(float durabilityPercent, float hueShift) {
         float hue;
         float saturation = 1.0f;
         float value;
 
         if (durabilityPercent >= 0.70f) {
-            // Green
             hue = 120f;
             value = 1.0f;
         } else if (durabilityPercent >= 0.40f) {
-            // Amber
             hue = 45f;
             value = 1.0f;
         } else if (durabilityPercent >= 0.15f) {
-            // Orange
             hue = 25f;
             value = 1.0f;
         } else if (durabilityPercent >= 0.05f) {
-            // Red
             hue = 0f;
             value = 1.0f;
         } else {
-            // Pulsing red — sine wave on Value
             hue = 0f;
             float pulse = (float) Math.sin(
                 (System.currentTimeMillis() % (long) PULSE_PERIOD_MS)
                 / PULSE_PERIOD_MS * 2.0 * Math.PI
             );
-            // Map sine (-1..1) to (PULSE_MIN_V..PULSE_MAX_V)
             value = PULSE_MIN_V + (pulse + 1f) / 2f * (PULSE_MAX_V - PULSE_MIN_V);
         }
+
+        // Apply dimension hue shift, keep in 0–360 range
+        hue = (hue + hueShift + 360f) % 360f;
 
         return hsvToArgb(hue, saturation, value);
     }
