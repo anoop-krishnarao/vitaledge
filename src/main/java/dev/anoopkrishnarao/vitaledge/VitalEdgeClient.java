@@ -11,6 +11,7 @@ public class VitalEdgeClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        VitalEdgeConfigManager.load();
         LOGGER.info("VitalEdge initialised.");
     }
 }

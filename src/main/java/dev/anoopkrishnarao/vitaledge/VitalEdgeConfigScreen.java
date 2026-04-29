@@ -177,6 +177,7 @@ public class VitalEdgeConfigScreen extends Screen {
         VitalEdgeConfig.smoothness = smoothness;
         VitalEdgeConfig.opacity = opacity;
         VitalEdgeConfig.biomeBlendStrength = biomeBlendStrength;
+        VitalEdgeConfigManager.save();
         this.minecraft.setScreen(parent);
     }
 
