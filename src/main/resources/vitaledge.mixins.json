@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.anoopkrishnarao.vitaledge.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ClientTickMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

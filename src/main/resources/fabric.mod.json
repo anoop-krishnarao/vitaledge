@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "VitalEdge",
   "description": "Client-side Minecraft utility mod.",
-  "authors": ["anoopk"],
+  "authors": ["Anoop K"],
   "contact": {
     "sources": "https://github.com/anoop-krishnarao/vitaledge"
   },
@@ -16,6 +16,9 @@
       "dev.anoopkrishnarao.vitaledge.VitalEdgeClient"
     ]
   },
+  "mixins": [
+    "vitaledge.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.16.0",
     "fabric-api": "*",
