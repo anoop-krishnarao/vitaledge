@@ -6,11 +6,7 @@ public class DurabilityColorMapper {
     private static final float PULSE_MIN_V = 0.55f;
     private static final float PULSE_MAX_V = 1.0f;
 
-    /**
-     * Returns a packed ARGB int for the given durability percent,
-     * dimension hue shift, and biome hue shift.
-     */
-    public static int getColor(float durabilityPercent, float dimensionHueShift, float biomeHueShift) {
+    public static int getColor(float durabilityPercent, float biomeHueShift) {
         float hue;
         float saturation = 1.0f;
         float value;
@@ -28,20 +24,15 @@ public class DurabilityColorMapper {
             hue = 0f;
             value = 1.0f;
         } else {
-            // Pulsing red — biome blend overridden, pure red pulse
+            // Pulsing red — biome blend overridden
             hue = 0f;
             float pulse = (float) Math.sin(
                 (System.currentTimeMillis() % (long) PULSE_PERIOD_MS)
                 / PULSE_PERIOD_MS * 2.0 * Math.PI
             );
             value = PULSE_MIN_V + (pulse + 1f) / 2f * (PULSE_MAX_V - PULSE_MIN_V);
-            // Apply dimension shift only — no biome blend when near-broken
-            hue = (hue + dimensionHueShift + 360f) % 360f;
             return hsvToArgb(hue, saturation, value);
         }
-
-        // Apply dimension hue shift
-        hue = (hue + dimensionHueShift + 360f) % 360f;
 
         // Apply biome hue blend scaled by blend strength
         hue = (hue + biomeHueShift * VitalEdgeConfig.biomeBlendStrength + 360f) % 360f;

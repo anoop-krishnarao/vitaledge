@@ -47,9 +47,8 @@ public class ArmorDurabilityTracker {
 
     public static int getColor(float playerY) {
         if (!hasArmor()) return 0x00000000;
-        float dimensionHueShift = DimensionTintProvider.getHueShift();
         float biomeHueShift = BiomeHueProvider.getHueShift();
-        int baseColor = DurabilityColorMapper.getColor(durabilityPercent, dimensionHueShift, biomeHueShift);
+        int baseColor = DurabilityColorMapper.getColor(durabilityPercent, biomeHueShift);
         return YHeightModifier.modify(baseColor, playerY);
     }
 }
