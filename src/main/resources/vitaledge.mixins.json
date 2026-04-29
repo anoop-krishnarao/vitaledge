@@ -4,7 +4,8 @@
   "package": "dev.anoopkrishnarao.vitaledge.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "ClientTickMixin"
+    "ClientTickMixin",
+    "HudRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
