@@ -5,7 +5,8 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "ClientTickMixin",
-    "HudRenderMixin"
+    "HudRenderMixin",
+    "LocalPlayerHurtMixin"
   ],
   "injectors": {
     "defaultRequire": 1

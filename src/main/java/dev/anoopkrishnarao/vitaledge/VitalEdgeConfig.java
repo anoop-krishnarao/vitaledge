@@ -16,4 +16,7 @@ public class VitalEdgeConfig {
 
     // Whether the overlay is enabled at all
     public static boolean enabled = true;
+
+    // Whether damage surge pulse is enabled
+    public static boolean surgeEnabled = true;
 }
