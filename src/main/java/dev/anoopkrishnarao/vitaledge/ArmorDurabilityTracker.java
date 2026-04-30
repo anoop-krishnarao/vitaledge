@@ -1,7 +1,6 @@
 package dev.anoopkrishnarao.vitaledge;
 
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.EquipmentSlot;
 
@@ -23,7 +22,8 @@ public class ArmorDurabilityTracker {
 
         for (EquipmentSlot slot : armorSlots) {
             ItemStack stack = player.getItemBySlot(slot);
-            if (!stack.isEmpty() && stack.getItem() instanceof ArmorItem) {
+            // Check if item is damageable and has durability — works across all 1.21.x
+            if (!stack.isEmpty() && stack.isDamageableItem()) {
                 totalMax += stack.getMaxDamage();
                 totalDamage += stack.getDamageValue();
                 equippedCount++;
