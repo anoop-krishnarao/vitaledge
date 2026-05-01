@@ -1,16 +1,30 @@
-# VitalEdge
+# Vital Edge
 
-A Minecraft Fabric client-side mod for 1.21.x.
+A Minecraft Fabric client-side mod for 1.21.1.
 
-Renders a 4-edge screen gradient that acts as an ambient armor durability indicator — no HUD text, no icons, no new items or blocks. The gradient color reflects your equipped armor's durability, modified by Y-height, with a damage surge overlay on hit.
+Renders a 4-edge screen gradient that acts as an ambient armor durability indicator — no HUD text, no icons, no new items. The gradient color reflects your equipped armor's durability, modified by Y-height and biome, with a damage surge animation on hit.
+
+## Download
+
+- [Modrinth](https://modrinth.com/mod/vital-edge)
+- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/vital-edge)
 
 ## Features
 
 - Screen-edge color gradient driven by armor durability (green → amber → orange → red → pulsing red)
 - Y-height modifier: lightens above Y=0, darkens below
-- Damage surge animation on hit, colored by damage type
-- Configurable via Mod Menu (edge thickness, Y clamps, surge toggle)
+- Biome hue blend across all 54 overworld biomes
+- Damage surge heartbeat animation on hit
+- Configurable via Mod Menu (edge thickness, gradient style, opacity, surge toggle, biome blend)
 - No armor equipped = gradient off entirely
+- Compatible with Iris + Sodium
+
+## Requirements
+
+- Minecraft 1.21.1
+- Fabric Loader ≥ 0.16.0
+- Fabric API
+- Mod Menu (optional, for configuration)
 
 ## Building
 
@@ -18,8 +32,10 @@ Renders a 4-edge screen gradient that acts as an ambient armor durability indica
 ./gradlew build
 ```
 
-## Development
+## Support
 
-- Java 21 (Temurin recommended via SDKMAN)
-- IntelliJ IDEA
-- Fabric Loom 1.14
+- [Ko-fi](https://ko-fi.com/anoopk)
+
+## License
+
+MIT — © 2026 Anoop K
